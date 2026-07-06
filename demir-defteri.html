@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#131518">
+<title>Demir Defteri</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap');
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin:0; background:#131518; color:#EEECE6; font-family:'Barlow',system-ui,sans-serif; }
+  #app { max-width:520px; margin:0 auto; padding:16px 14px 40px; min-height:100vh; }
+  input { background:#131518; border:1px solid #2C3138; border-radius:8px; color:#EEECE6; padding:10px 8px; font-size:16px; width:72px; font-family:inherit; }
+  input::placeholder { color:#565D66; }
+  input:focus, button:focus-visible { outline:2px solid #F0B429; outline-offset:1px; }
+  button { font-family:inherit; cursor:pointer; }
+  .title { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:34px; letter-spacing:2px; line-height:1; }
+  .sub { color:#8B9199; font-size:13px; margin-top:4px; letter-spacing:.5px; }
+  .strip { display:flex; justify-content:space-between; align-items:center; background:#1D2126; border:1px solid #262B31; border-radius:12px; padding:12px 16px; margin:14px 0; }
+  .strip .lbl { color:#8B9199; font-size:13px; text-transform:uppercase; letter-spacing:1px; }
+  .tabs { display:flex; gap:8px; margin-bottom:14px; }
+  .tab { flex:1; padding:10px 0; background:#1D2126; color:#8B9199; border:1px solid #262B31; border-radius:10px; font-size:14px; font-weight:600; }
+  .tab.active { background:#EEECE6; color:#131518; border-color:#EEECE6; }
+  .daycard { display:flex; align-items:center; gap:14px; width:100%; background:#1D2126; border:1px solid #262B31; border-radius:14px; padding:16px; margin-bottom:10px; color:#EEECE6; text-align:left; }
+  .plate { width:18px; height:44px; border-radius:5px; flex-shrink:0; box-shadow:inset 0 0 0 3px rgba(0,0,0,.25); }
+  .dayname { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:22px; letter-spacing:1px; display:flex; align-items:center; gap:8px; }
+  .badge { font-family:'Barlow',sans-serif; font-size:11px; font-weight:600; color:#3FA463; background:rgba(63,164,99,.12); padding:2px 8px; border-radius:20px; letter-spacing:0; }
+  .daysub { color:#8B9199; font-size:13px; margin-top:2px; }
+  .chev { color:#565D66; font-size:24px; margin-left:auto; }
+  .card { background:#1D2126; border:1px solid #262B31; border-radius:14px; padding:14px; margin-bottom:12px; }
+  .exhead { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .exname { font-weight:600; font-size:16px; }
+  .target { font-family:'Barlow Condensed',sans-serif; color:#F0B429; font-weight:700; font-size:17px; white-space:nowrap; }
+  .rpechip { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; color:#131518; background:#F0B429; padding:1px 7px; border-radius:6px; letter-spacing:.5px; white-space:nowrap; }
+  .last { color:#8B9199; font-size:12px; margin-top:4px; }
+  .setrow { display:flex; align-items:center; gap:8px; margin-top:10px; }
+  .setno { color:#565D66; width:16px; font-size:13px; font-weight:600; }
+  .x { color:#565D66; }
+  .rpein { width:56px; border-color:#3A3320 !important; }
+  .check { margin-left:auto; border:none; border-radius:8px; width:44px; height:42px; font-size:18px; font-weight:700; background:#262B31; color:#8B9199; }
+  .bigbtn { width:100%; background:#F0B429; color:#131518; border:none; border-radius:12px; padding:15px 0; font-size:16px; font-weight:700; margin-top:4px; }
+  .ghost { background:#1D2126; color:#8B9199; border:1px solid #262B31; border-radius:10px; padding:10px 12px; font-size:13px; font-weight:600; }
+  .whead { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+  .back { background:#1D2126; border:1px solid #262B31; color:#EEECE6; border-radius:10px; width:40px; height:40px; font-size:20px; }
+  .wtitle { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:26px; letter-spacing:1px; line-height:1; }
+  .wsub { color:#8B9199; font-size:12px; margin-top:2px; }
+  .dots { margin-left:auto; display:flex; flex-wrap:wrap; gap:4px; max-width:120px; justify-content:flex-end; }
+  .dot { width:10px; height:10px; border-radius:50%; background:#2C3138; }
+  .legend { background:#1D2126; border:1px solid #3A3320; border-radius:12px; padding:10px 14px; font-size:12.5px; color:#B9BEC5; line-height:1.6; margin-bottom:12px; }
+  .legend b { color:#F0B429; }
+  .histhead { display:flex; align-items:center; gap:8px; }
+  .histdate { color:#8B9199; font-size:13px; }
+  .vol { color:#F0B429; font-size:13px; margin:6px 0 8px; font-weight:600; }
+  .line { display:flex; justify-content:space-between; gap:10px; font-size:13px; margin-top:4px; }
+  .line .n { color:#B9BEC5; } .line .v { color:#8B9199; text-align:right; }
+  .del { background:none; border:none; color:#565D66; font-size:12px; }
+  .empty { color:#8B9199; font-size:14px; background:#1D2126; border:1px dashed #2C3138; border-radius:14px; padding:18px; line-height:1.5; }
+  .mgrid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+  .mgrid input { width:100%; }
+  .mlbl { color:#8B9199; font-size:12px; margin-bottom:4px; }
+  #toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#EEECE6; color:#131518; padding:10px 18px; border-radius:24px; font-weight:600; font-size:14px; box-shadow:0 4px 16px rgba(0,0,0,.4); display:none; z-index:9; }
+  .mini { width:12px; height:12px; border-radius:50%; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<script>
+const PROGRAM = [
+  { id:"push", name:"Push", sub:"Göğüs · Omuz · Arka Kol", plate:"#E8493E", exercises:[
+    { id:"bench", name:"Bench Press", sets:4, reps:"6-8", rpe:"7-8" },
+    { id:"incdb", name:"Incline Dumbbell Press", sets:3, reps:"8-10", rpe:"8" },
+    { id:"ohp", name:"Omuz Press", sets:3, reps:"8-10", rpe:"8" },
+    { id:"latraise", name:"Lateral Raise", sets:3, reps:"12-15", rpe:"9" },
+    { id:"pushdown", name:"Cable Triceps Pushdown", sets:3, reps:"10-12", rpe:"9" } ]},
+  { id:"pull", name:"Pull", sub:"Sırt · Ön Kol", plate:"#3B6FD4", exercises:[
+    { id:"latpd", name:"Lat Pulldown / Barfiks", sets:4, reps:"6-8", rpe:"7-8" },
+    { id:"row", name:"Barbell / Makine Row", sets:3, reps:"8-10", rpe:"8" },
+    { id:"cablerow", name:"Seated Cable Row", sets:3, reps:"10-12", rpe:"8" },
+    { id:"facepull", name:"Face Pull", sets:3, reps:"12-15", rpe:"9" },
+    { id:"curl", name:"Barbell Curl", sets:3, reps:"8-10", rpe:"8-9" },
+    { id:"hammer", name:"Hammer Curl", sets:2, reps:"12", rpe:"9" } ]},
+  { id:"legs", name:"Legs", sub:"Bacak", plate:"#F0B429", exercises:[
+    { id:"squat", name:"Squat / Leg Press", sets:4, reps:"6-8", rpe:"7-8" },
+    { id:"rdl", name:"Romanian Deadlift", sets:3, reps:"8-10", rpe:"7-8" },
+    { id:"legext", name:"Leg Extension", sets:3, reps:"12", rpe:"9" },
+    { id:"legcurl", name:"Leg Curl", sets:3, reps:"12", rpe:"9" },
+    { id:"calf", name:"Calf Raise", sets:4, reps:"15", rpe:"9" } ]},
+  { id:"upper", name:"Upper", sub:"Üst Vücut", plate:"#3FA463", exercises:[
+    { id:"incbench", name:"Incline Bench Press", sets:3, reps:"8", rpe:"8" },
+    { id:"csrow", name:"Chest-Supported Row", sets:3, reps:"8", rpe:"8" },
+    { id:"dbohp", name:"Dumbbell Shoulder Press", sets:3, reps:"10", rpe:"8" },
+    { id:"fly", name:"Cable Fly", sets:2, reps:"12", rpe:"9" },
+    { id:"latpd2", name:"Lat Pulldown", sets:2, reps:"12", rpe:"9" },
+    { id:"arms", name:"Superset: Biceps + Triceps", sets:3, reps:"12", rpe:"9" } ]},
+  { id:"lower", name:"Lower", sub:"Bacak · Core", plate:"#9A5BD1", exercises:[
+    { id:"dead", name:"Deadlift / Hack Squat", sets:3, reps:"6", rpe:"7" },
+    { id:"bss", name:"Bulgarian Split Squat", sets:3, reps:"10", rpe:"8" },
+    { id:"legcurl2", name:"Leg Curl", sets:3, reps:"12", rpe:"9" },
+    { id:"plank", name:"Plank (sn)", sets:3, reps:"45 sn", rpe:"8" },
+    { id:"crunch", name:"Cable Crunch", sets:3, reps:"15", rpe:"9" } ]},
+];
+const KEY = "demir-defteri";
+const GUNLER = ["Paz","Pzt","Sal","Çar","Per","Cum","Cmt"];
+const AYLAR = ["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"];
+const ALL_EX = PROGRAM.flatMap(d=>d.exercises);
+
+let data = load();
+let tab = "program", activeDay = null, draft = {};
+
+function load(){
+  try { const v = JSON.parse(localStorage.getItem(KEY)); if (v && v.sessions) return v; } catch(e){}
+  return { sessions:[], measurements:[] };
+}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e){ toast("Kaydetme hatası"); } }
+function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.style.display="block"; setTimeout(()=>t.style.display="none",2500); }
+function fmtDate(iso){ const d=new Date(iso); return d.getDate()+" "+AYLAR[d.getMonth()]+", "+GUNLER[d.getDay()]; }
+function weekStart(){ const x=new Date(); const day=(x.getDay()+6)%7; x.setHours(0,0,0,0); x.setDate(x.getDate()-day); return x; }
+function lastSetsFor(exId){
+  for (let i=data.sessions.length-1;i>=0;i--){ const s=data.sessions[i]; if (s.sets[exId] && s.sets[exId].length) return s.sets[exId]; }
+  return null;
+}
+function totalVolume(s){ let v=0; Object.values(s.sets).forEach(a=>a.forEach(x=>v+=(x.w||0)*(x.r||0))); return Math.round(v); }
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+// ---------- Ana ekran ----------
+function renderHome(){
+  const ws = weekStart();
+  const doneIds = new Set(data.sessions.filter(s=>new Date(s.date)>=ws).map(s=>s.dayId));
+  let html = `
+    <div class="title">DEMİR DEFTERİ</div>
+    <div class="sub">Push · Pull · Legs · Upper · Lower</div>
+    <div class="strip"><span class="lbl">Bu hafta</span><span><b style="color:#F0B429">${doneIds.size}</b> / 5 antrenman</span></div>
+    <div class="tabs">
+      ${[["program","Program"],["gecmis","Geçmiş"],["olculer","Ölçüler"]].map(([id,l])=>
+        `<button class="tab ${tab===id?"active":""}" onclick="setTab('${id}')">${l}</button>`).join("")}
+    </div>`;
+
+  if (tab==="program"){
+    html += PROGRAM.map(d=>`
+      <button class="daycard" onclick="startWorkout('${d.id}')">
+        <div class="plate" style="background:${d.plate}"></div>
+        <div style="flex:1">
+          <div class="dayname">${d.name}${doneIds.has(d.id)?'<span class="badge">bu hafta ✓</span>':''}</div>
+          <div class="daysub">${d.sub} · ${d.exercises.length} hareket</div>
+        </div>
+        <span class="chev">›</span>
+      </button>`).join("");
+  }
+
+  if (tab==="gecmis"){
+    if (!data.sessions.length) html += `<div class="empty">Henüz kayıtlı antrenman yok. Program sekmesinden bir gün seçip başla.</div>`;
+    html += [...data.sessions].reverse().map((s,ri)=>{
+      const idx = data.sessions.length-1-ri;
+      const day = PROGRAM.find(d=>d.id===s.dayId);
+      const lines = Object.entries(s.sets).map(([exId,arr])=>{
+        const ex = ALL_EX.find(e=>e.id===exId);
+        return `<div class="line"><span class="n">${ex?esc(ex.name):exId}</span><span class="v">${arr.map(x=>x.w+"×"+x.r+(x.rpe?"@"+x.rpe:"")).join("&nbsp; ")}</span></div>`;
+      }).join("");
+      return `<div class="card">
+        <div class="histhead"><div class="mini" style="background:${day?day.plate:"#555"}"></div>
+          <b style="flex:1">${day?day.name:s.dayId}</b>
+          <span class="histdate">${fmtDate(s.date)}</span>
+          <button class="del" onclick="delSession(${idx})">sil</button></div>
+        <div class="vol">Toplam hacim: ${totalVolume(s).toLocaleString("tr-TR")} kg</div>${lines}</div>`;
+    }).join("");
+    html += `<div style="display:flex;gap:8px;margin-top:6px">
+      <button class="ghost" style="flex:1" onclick="backup()">Yedek al</button>
+      <button class="ghost" style="flex:1" onclick="restore()">Yedek yükle</button></div>`;
+  }
+
+  if (tab==="olculer"){
+    html += `<div class="card"><div class="exname">Yeni ölçüm ekle</div>
+      <div class="mgrid">
+        <div><div class="mlbl">Kilo (kg)</div><input id="m-kilo" inputmode="decimal"></div>
+        <div><div class="mlbl">Bel (cm)</div><input id="m-bel" inputmode="decimal"></div>
+        <div><div class="mlbl">Göğüs (cm)</div><input id="m-gogus" inputmode="decimal"></div>
+        <div><div class="mlbl">Kol (cm)</div><input id="m-kol" inputmode="decimal"></div>
+      </div>
+      <button class="bigbtn" style="margin-top:12px" onclick="addM()">Kaydet</button></div>`;
+    if (!data.measurements.length)
+      html += `<div class="empty">İlk ölçümün olarak bugünkü değerlerini girebilirsin: 85.5 kg · bel 96 · göğüs 105 · kol 39. Her 2 haftada bir ölçüm al.</div>`;
+    html += [...data.measurements].reverse().map(e=>`
+      <div class="card"><b>${fmtDate(e.date)}</b>
+        <div class="line" style="margin-top:6px"><span class="n">
+          ${e.kilo?e.kilo+" kg":""}${e.bel?" · Bel "+e.bel:""}${e.gogus?" · Göğüs "+e.gogus:""}${e.kol?" · Kol "+e.kol:""}
+        </span></div></div>`).join("");
+  }
+
+  document.getElementById("app").innerHTML = html;
+}
+
+// ---------- Antrenman ----------
+function startWorkout(dayId){
+  const day = PROGRAM.find(d=>d.id===dayId);
+  draft = {};
+  day.exercises.forEach(ex=>{
+    const last = lastSetsFor(ex.id);
+    draft[ex.id] = Array.from({length:ex.sets},(_,i)=>({
+      w: last&&last[i]?String(last[i].w):"", r:"", rpe:"", done:false }));
+  });
+  activeDay = dayId;
+  renderWorkout();
+  window.scrollTo(0,0);
+}
+
+function renderWorkout(){
+  const day = PROGRAM.find(d=>d.id===activeDay);
+  const total = Object.values(draft).flat().length;
+  let html = `
+    <div class="whead">
+      <button class="back" onclick="goHome()">←</button>
+      <div><div class="wtitle">${day.name}</div><div class="wsub">${day.sub}</div></div>
+      <div class="dots" id="dots">${Array.from({length:total}).map(()=>'<div class="dot"></div>').join("")}</div>
+    </div>
+    <div class="legend"><b>RPE nedir?</b> 10 üzerinden zorlanma: <b>7</b> = 3 tekrar daha yapabilirdim · <b>8</b> = 2 tekrar · <b>9</b> = 1 tekrar · <b>10</b> = tam tükeniş. Hedefin altında kalıyorsan gelecek sette ağırlığı artır.</div>`;
+
+  html += day.exercises.map(ex=>{
+    const last = lastSetsFor(ex.id);
+    const lastTxt = last ? "Geçen: "+last.map(s=>s.w+"×"+s.r+(s.rpe?"@"+s.rpe:"")).join("&nbsp; ") : "";
+    const rows = draft[ex.id].map((s,i)=>`
+      <div class="setrow">
+        <span class="setno">${i+1}</span>
+        <input inputmode="decimal" placeholder="kg" value="${s.w}" oninput="upd('${ex.id}',${i},'w',this.value)">
+        <span class="x">×</span>
+        <input inputmode="numeric" placeholder="tekrar" oninput="upd('${ex.id}',${i},'r',this.value)">
+        <input class="rpein" inputmode="decimal" placeholder="RPE" oninput="upd('${ex.id}',${i},'rpe',this.value)">
+        <button class="check" id="chk-${ex.id}-${i}" onclick="tgl('${ex.id}',${i},'${day.plate}')">✓</button>
+      </div>`).join("");
+    return `<div class="card">
+      <div class="exhead"><span class="exname">${esc(ex.name)}</span>
+        <span style="display:flex;gap:8px;align-items:baseline">
+          <span class="target">${ex.sets}×${ex.reps}</span><span class="rpechip">RPE ${ex.rpe}</span>
+        </span></div>
+      ${lastTxt?`<div class="last">${lastTxt}</div>`:""}${rows}</div>`;
+  }).join("");
+
+  html += `<button class="bigbtn" onclick="finish()">Antrenmanı bitir ve kaydet</button>`;
+  document.getElementById("app").innerHTML = html;
+}
+
+function upd(exId,i,f,v){ draft[exId][i][f]=v; }
+function tgl(exId,i,color){
+  draft[exId][i].done = !draft[exId][i].done;
+  const b = document.getElementById("chk-"+exId+"-"+i);
+  if (draft[exId][i].done){ b.style.background=color; b.style.color="#131518"; }
+  else { b.style.background="#262B31"; b.style.color="#8B9199"; }
+  const done = Object.values(draft).flat().filter(s=>s.done).length;
+  document.querySelectorAll("#dots .dot").forEach((d,j)=>{ d.style.background = j<done?color:"#2C3138"; });
+}
+function finish(){
+  const sets = {};
+  Object.entries(draft).forEach(([exId,arr])=>{
+    const done = arr.filter(s=>s.done && s.w!=="" && s.r!=="")
+      .map(s=>{ const o={w:parseFloat(s.w),r:parseFloat(s.r)}; if(s.rpe!=="") o.rpe=parseFloat(s.rpe); return o; });
+    if (done.length) sets[exId]=done;
+  });
+  if (!Object.keys(sets).length){ toast("Kaydedilecek tamamlanmış set yok"); return; }
+  data.sessions.push({ date:new Date().toISOString(), dayId:activeDay, sets });
+  save(); activeDay=null; renderHome(); toast("Antrenman kaydedildi 💪");
+}
+function goHome(){ activeDay=null; renderHome(); }
+function setTab(t){ tab=t; renderHome(); }
+function delSession(idx){ data.sessions.splice(idx,1); save(); renderHome(); }
+function addM(){
+  const g = id=>document.getElementById(id).value.trim();
+  const e = { date:new Date().toISOString(), kilo:g("m-kilo"), bel:g("m-bel"), gogus:g("m-gogus"), kol:g("m-kol") };
+  if (!e.kilo && !e.bel && !e.gogus && !e.kol) return;
+  data.measurements.push(e); save(); renderHome(); toast("Ölçüler kaydedildi");
+}
+function backup(){
+  const txt = JSON.stringify(data);
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=>toast("Yedek panoya kopyalandı — bir nota yapıştır"))
+      .catch(()=>prompt("Bu metni kopyalayıp sakla:", txt));
+  } else prompt("Bu metni kopyalayıp sakla:", txt);
+}
+function restore(){
+  const txt = prompt("Yedek metnini buraya yapıştır:");
+  if (!txt) return;
+  try { const v = JSON.parse(txt); if (v && v.sessions){ data=v; save(); renderHome(); toast("Yedek geri yüklendi"); } else toast("Geçersiz yedek"); }
+  catch(e){ toast("Geçersiz yedek"); }
+}
+renderHome();
+</script>
+</body>
+</html>
